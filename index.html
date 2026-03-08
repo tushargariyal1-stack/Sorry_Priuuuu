@@ -1,23 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I am Sorry :(</title>
+    <title>I am Sorry ❤️</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #ffeef2;
-            color: #333;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fff5f7 0%, #ffdee5 100%);
+            color: #444;
             overflow-x: hidden;
             text-align: center;
         }
 
-        /* Hero Section */
+        /* Music Button */
+        #musicBtn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* Sections */
         .section {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -25,114 +40,157 @@
             padding: 20px;
         }
 
-        h1 { color: #ff4d6d; font-size: 3rem; }
-        p { font-size: 1.2rem; max-width: 600px; line-height: 1.6; }
+        h1 { color: #ff4d6d; font-size: clamp(2rem, 8vw, 3.5rem); margin-bottom: 10px; }
+        p { font-size: 1.1rem; max-width: 600px; line-height: 1.8; color: #666; }
 
-        /* Story Section */
-        .story-box {
-            background: white;
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
             padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.1);
             margin: 20px;
         }
 
-        /* Final Buttons */
-        .btn-container {
+        /* Buttons logic */
+        .btn-wrapper {
             position: relative;
-            height: 100px;
-            margin-top: 30px;
+            width: 100%;
+            height: 300px; /* Space for button movement */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px; /* Fixed space between buttons */
         }
 
         .btn {
-            padding: 15px 40px;
+            padding: 16px 45px;
             font-size: 1.2rem;
+            font-weight: bold;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: 0.3s;
-            margin: 10px;
+            transition: transform 0.2s, background-color 0.3s;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
 
-        #noBtn {
+        /* The Button that runs away */
+        #yesBtn {
             background-color: #ff4d6d;
             color: white;
-            position: absolute;
+            position: relative; /* Becomes absolute via JS when hovered */
+            z-index: 99;
         }
 
-        #yesBtn {
+        /* The "Forgive" Button */
+        #noBtn {
             background-color: #4caf50;
             color: white;
+            z-index: 10;
         }
 
-        .floating-hearts {
+        #noBtn:hover { transform: scale(1.1); }
+
+        /* Floating Hearts Animation */
+        .heart {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            font-size: 20px;
+            color: #ff4d6d;
             pointer-events: none;
             z-index: -1;
+            animation: float 4s linear forwards;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="floating-hearts" id="hearts"></div>
+    <button id="musicBtn" onclick="toggleMusic()">🎵</button>
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
 
     <div class="section">
-        <h1>Hey... ❤️</h1>
-        <p>Main jaanta hoon maine galti ki hai, aur mujhe pata hai tum mujhse bahut naraz ho.</p>
-        <p>(Niche scroll karo, please...)</p>
+        <h1>Suno... ❤️</h1>
+        <p>Main jaanta hoon ki pichle kuch din ache nahi rahe,<br>aur maine tumhe bahut pareshaan kiya hai.</p>
+        <p>Thora niche scroll karo...</p>
     </div>
 
     <div class="section">
-        <div class="story-box">
-            <h2>Kyuki Tum Mere Liye Sab Kuch Ho</h2>
-            <p>Humari wo baatein, wo lambi calls, aur wo choti choti khushiyan... <br>
-            Main sab miss kar raha hoon. Tumhare bina sab adhura lag raha hai.</p>
-            <p>Main promise karta hoon ki main koshish karunga ek behtar partner banne ki.</p>
+        <div class="card">
+            <h2>I'm Really Sorry</h2>
+            <p>Tumhare bina mera din shuru nahi hota aur tumhare gusse se mera sukoon khatam ho jata hai. <br> Main bas itna chahta hoon ki hum pehle jaise ho jayein.</p>
         </div>
     </div>
 
-    <div class="section" id="final-section">
-        <h2 id="questionText">Kya ab bhi tum mujhse naraz ho?</h2>
-        <div class="btn-container">
-            <button class="btn" id="noBtn" onmouseover="moveButton()">Haan (Yes)</button>
-            <button class="btn" id="yesBtn" onclick="forgiven()">Nahi (No)</button>
+    <div class="section">
+        <h2 id="question">Kya ab bhi tum mujhse naraz ho?</h2>
+        
+        <div class="btn-wrapper" id="container">
+            <button class="btn" id="yesBtn" onmouseover="runAway()" onclick="runAway()">Haan (Yes)</button>
+            
+            <button class="btn" id="noBtn" onclick="forgiven()">Nahi (No)</button>
         </div>
     </div>
 
     <script>
-        // Button ko bhagane wala function
-        function moveButton() {
-            const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+        const music = document.getElementById('bgMusic');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                document.getElementById('musicBtn').innerText = "🔇";
+            } else {
+                music.play();
+                document.getElementById('musicBtn').innerText = "🎵";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function runAway() {
+            const btn = document.getElementById('yesBtn');
+            const container = document.getElementById('container');
             
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
+            // Calculate random position within the container
+            const maxX = container.clientWidth - btn.clientWidth;
+            const maxY = container.clientHeight - btn.clientHeight;
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            btn.style.position = 'absolute';
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
         }
 
-        // Maafi milne par message
         function forgiven() {
-            document.getElementById('questionText').innerHTML = "Yayyy! ❤️ I Promise main tumhe kabhi sad nahi karunga! I Love You!";
-            document.querySelector('.btn-container').style.display = 'none';
-            alert("Thank you! Chalo ab jaldi se reply karo :p");
+            const question = document.getElementById('question');
+            const container = document.getElementById('container');
+            
+            question.innerHTML = "I Love You So Much! ❤️<br>Main jaanta tha tum zyada der tak gussa nahi reh sakti!";
+            container.innerHTML = "<h3>Ab jaldi se mujhe call/text karo! 🙈</h3>";
+            
+            // Celebration effects
+            setInterval(createHeart, 100);
         }
 
-        // Background hearts (Simple CSS particles)
         function createHeart() {
             const heart = document.createElement('div');
+            heart.classList.add('heart');
             heart.innerHTML = '❤️';
-            heart.style.position = 'fixed';
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
-            heart.style.opacity = Math.random();
-            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-            document.getElementById('hearts').appendChild(heart);
-
-            setTimeout(() => { heart.remove(); }, 5000);
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
         }
-        setInterval(createHeart, 300);
-    </script>
 
+        // Background hearts slow animation
+        setInterval(createHeart, 500);
+    </script>
 </body>
 </html>
