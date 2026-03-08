@@ -21,7 +21,6 @@
             height: 100vh;
         }
 
-        /* Background Music UI */
         .music-player {
             position: fixed;
             top: 20px;
@@ -35,7 +34,6 @@
             font-size: 14px;
         }
 
-        /* Journey Container */
         #main-container {
             width: 90%;
             max-width: 500px;
@@ -78,6 +76,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            gap: 20px; /* Space between buttons */
         }
 
         .btn-yes {
@@ -86,9 +85,10 @@
             padding: 15px 40px;
             border-radius: 15px;
             border: none;
-            position: absolute;
+            position: absolute; /* Kept for teleportation */
+            left: 20%; /* Initial distinct position */
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 20;
         }
 
@@ -100,9 +100,10 @@
             border: none;
             cursor: pointer;
             z-index: 10;
+            position: relative;
+            left: 25%; /* Pushed to the right */
         }
 
-        /* Hearts background */
         .heart {
             position: absolute;
             color: var(--primary);
@@ -184,9 +185,14 @@
         function teleport() {
             const btn = document.getElementById('runBtn');
             const wrap = document.getElementById('btn-wrap');
-            // Constraints to keep button inside the wrap area
-            const x = Math.random() * (wrap.clientWidth - btn.clientWidth);
-            const y = (Math.random() - 0.5) * 100; 
+            
+            // Generate random positions within the container
+            const maxWidth = wrap.clientWidth - btn.clientWidth;
+            const maxHeight = wrap.clientHeight - btn.clientHeight;
+            
+            const x = Math.random() * maxWidth;
+            const y = (Math.random() - 0.5) * 150; // Random height offset
+            
             btn.style.left = x + 'px';
             btn.style.top = y + 'px';
         }
@@ -201,7 +207,7 @@
         function toggleMusic() {
             const a = document.getElementById('track');
             if(a.paused) { 
-                a.play().catch(e => console.log("Audio play blocked by browser.")); 
+                a.play().catch(e => console.log("Audio play blocked.")); 
                 document.getElementById('m-text').innerText = "Playing..."; 
             }
             else { 
@@ -217,7 +223,7 @@
             h.style.left = Math.random() * 100 + 'vw';
             h.style.fontSize = Math.random() * 20 + 10 + 'px';
             const duration = Math.random() * 3 + 2;
-            h.style.animationDuration = duration + 's'; // Fixed animation property
+            h.style.animationDuration = duration + 's';
             document.getElementById('hearts-bg').appendChild(h);
             setTimeout(() => h.remove(), duration * 1000);
         }
