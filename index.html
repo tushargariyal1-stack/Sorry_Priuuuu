@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I am Sorry :(</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffeef2;
+            color: #333;
+            overflow-x: hidden;
+            text-align: center;
+        }
+
+        /* Hero Section */
+        .section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 { color: #ff4d6d; font-size: 3rem; }
+        p { font-size: 1.2rem; max-width: 600px; line-height: 1.6; }
+
+        /* Story Section */
+        .story-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: 20px;
+        }
+
+        /* Final Buttons */
+        .btn-container {
+            position: relative;
+            height: 100px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 10px;
+        }
+
+        #noBtn {
+            background-color: #ff4d6d;
+            color: white;
+            position: absolute;
+        }
+
+        #yesBtn {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .floating-hearts {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="floating-hearts" id="hearts"></div>
+
+    <div class="section">
+        <h1>Hey... ❤️</h1>
+        <p>Main jaanta hoon maine galti ki hai, aur mujhe pata hai tum mujhse bahut naraz ho.</p>
+        <p>(Niche scroll karo, please...)</p>
+    </div>
+
+    <div class="section">
+        <div class="story-box">
+            <h2>Kyuki Tum Mere Liye Sab Kuch Ho</h2>
+            <p>Humari wo baatein, wo lambi calls, aur wo choti choti khushiyan... <br>
+            Main sab miss kar raha hoon. Tumhare bina sab adhura lag raha hai.</p>
+            <p>Main promise karta hoon ki main koshish karunga ek behtar partner banne ki.</p>
+        </div>
+    </div>
+
+    <div class="section" id="final-section">
+        <h2 id="questionText">Kya ab bhi tum mujhse naraz ho?</h2>
+        <div class="btn-container">
+            <button class="btn" id="noBtn" onmouseover="moveButton()">Haan (Yes)</button>
+            <button class="btn" id="yesBtn" onclick="forgiven()">Nahi (No)</button>
+        </div>
+    </div>
+
+    <script>
+        // Button ko bhagane wala function
+        function moveButton() {
+            const btn = document.getElementById('noBtn');
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+
+        // Maafi milne par message
+        function forgiven() {
+            document.getElementById('questionText').innerHTML = "Yayyy! ❤️ I Promise main tumhe kabhi sad nahi karunga! I Love You!";
+            document.querySelector('.btn-container').style.display = 'none';
+            alert("Thank you! Chalo ab jaldi se reply karo :p");
+        }
+
+        // Background hearts (Simple CSS particles)
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'fixed';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            heart.style.opacity = Math.random();
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            document.getElementById('hearts').appendChild(heart);
+
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+        setInterval(createHeart, 300);
+    </script>
+
+</body>
+</html>
