@@ -1,196 +1,214 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I am Sorry ❤️</title>
+    <title>For My Favorite Person ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
+        :root { --primary: #ff4d6d; --secondary: #ffb3c1; --bg: #0b0118; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #fff5f7 0%, #ffdee5 100%);
-            color: #444;
-            overflow-x: hidden;
-            text-align: center;
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        /* Music Button */
-        #musicBtn {
+        /* Background Music UI */
+        .music-player {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 1000;
-            background: white;
-            border: none;
-            padding: 10px;
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             cursor: pointer;
-            font-size: 20px;
-        }
-
-        /* Sections */
-        .section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        h1 { color: #ff4d6d; font-size: clamp(2rem, 8vw, 3.5rem); margin-bottom: 10px; }
-        p { font-size: 1.1rem; max-width: 600px; line-height: 1.8; color: #666; }
-
-        .card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
             border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.1);
-            margin: 20px;
+            border: 1px solid var(--secondary);
+            font-size: 14px;
         }
 
-        /* Buttons logic */
-        .btn-wrapper {
-            position: relative;
-            width: 100%;
-            height: 300px; /* Space for button movement */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 50px; /* Fixed space between buttons */
-        }
-
-        .btn {
-            padding: 16px 45px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.3s;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-        }
-
-        /* The Button that runs away */
-        #yesBtn {
-            background-color: #ff4d6d;
-            color: white;
-            position: relative; /* Becomes absolute via JS when hovered */
-            z-index: 99;
-        }
-
-        /* The "Forgive" Button */
-        #noBtn {
-            background-color: #4caf50;
-            color: white;
+        /* Journey Container */
+        #main-container {
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
             z-index: 10;
         }
 
-        #noBtn:hover { transform: scale(1.1); }
-
-        /* Floating Hearts Animation */
-        .heart {
-            position: fixed;
-            font-size: 20px;
-            color: #ff4d6d;
-            pointer-events: none;
-            z-index: -1;
-            animation: float 4s linear forwards;
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.8s ease-out;
         }
 
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        .card.active { display: block; }
+
+        h1 { font-family: 'Dancing Script', cursive; font-size: 3rem; color: var(--primary); margin-bottom: 20px; }
+        p { font-size: 1.1rem; line-height: 1.6; color: #ddd; margin-bottom: 25px; }
+
+        .btn-next {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-next:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--primary); }
+
+        /* Final Buttons */
+        .final-btns {
+            position: relative;
+            height: 150px;
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px; /* Perfect spacing */
+        }
+
+        .btn-yes {
+            background: #ff3333;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 15px;
+            border: none;
+            position: absolute;
+            left: 10%;
+            cursor: pointer;
+            transition: 0.2s; /* Fast teleport */
+        }
+
+        .btn-no {
+            background: #2ecc71;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Hearts background */
+        .heart {
+            position: absolute;
+            color: var(--primary);
+            opacity: 0.5;
+            animation: move linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes move {
+            from { transform: translateY(100vh); }
+            to { transform: translateY(-10vh); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <button id="musicBtn" onclick="toggleMusic()">🎵</button>
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
+    <div id="hearts-bg"></div>
 
-    <div class="section">
-        <h1>Suno... ❤️</h1>
-        <p>Main jaanta hoon ki pichle kuch din ache nahi rahe,<br>aur maine tumhe bahut pareshaan kiya hai.</p>
-        <p>Thora niche scroll karo...</p>
+    <div class="music-player" onclick="toggleMusic()">
+        <span id="m-icon">🎵</span> <span id="m-text">Play Our Song</span>
+        <audio id="track" loop>
+            <source src="music.mp3" type="audio/mpeg">
+        </audio>
     </div>
 
-    <div class="section">
-        <div class="card">
-            <h2>I'm Really Sorry</h2>
-            <p>Tumhare bina mera din shuru nahi hota aur tumhare gusse se mera sukoon khatam ho jata hai. <br> Main bas itna chahta hoon ki hum pehle jaise ho jayein.</p>
+    <div id="main-container">
+        <div class="card active" id="c1">
+            <h1>Hey You...</h1>
+            <p>Mujhe pata hai tum gussa ho, aur shayad tum ye page band karna chahti ho. Par please, mere liye 2 minute ruko?</p>
+            <button class="btn-next" onclick="nextCard(1)">Theek hai, Bolo...</button>
         </div>
-    </div>
 
-    <div class="section">
-        <h2 id="question">Kya ab bhi tum mujhse naraz ho?</h2>
-        
-        <div class="btn-wrapper" id="container">
-            <button class="btn" id="yesBtn" onmouseover="runAway()" onclick="runAway()">Haan (Yes)</button>
-            
-            <button class="btn" id="noBtn" onclick="forgiven()">Nahi (No)</button>
+        <div class="card" id="c2">
+            <h1>Do You Remember?</h1>
+            <p>Humari wo pehli lambi baat? Jab humne ghanto tak ek dusre ko jaana tha. Wo mere liye sabse special tha.</p>
+            <button class="btn-next" onclick="nextCard(2)">Haan, yaad hai...</button>
+        </div>
+
+        <div class="card" id="c3">
+            <h1>I Know I Failed...</h1>
+            <p>Maine galti ki, maine tumhe hurt kiya. Aur sach bolu toh mera pura din tumhare bina adhura gaya hai. Main bas purana wala "Hum" waapas chahta hoon.</p>
+            <button class="btn-next" onclick="nextCard(3)">Keep going...</button>
+        </div>
+
+        <div class="card" id="c4">
+            <h1>A Small Promise</h1>
+            <p>Main perfect nahi hoon, par main promise karta hoon ki main har din tumhare liye behtar banne ki koshish karunga. ❤️</p>
+            <button class="btn-next" onclick="nextCard(4)">One last thing?</button>
+        </div>
+
+        <div class="card" id="c5">
+            <h1 id="final-h">Ab batao...</h1>
+            <p id="final-p">Kya ab bhi tum mujhse naraz rahogi ya mujhe maaf kar dogi?</p>
+            <div class="final-btns" id="btn-wrap">
+                <button class="btn-yes" id="runBtn" onmouseover="teleport()" onclick="teleport()">Haan (Yes)</button>
+                <button class="btn-no" onclick="forgiveMe()">Nahi (No)</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const music = document.getElementById('bgMusic');
-        let isPlaying = false;
+        function nextCard(current) {
+            document.getElementById('c' + current).classList.remove('active');
+            document.getElementById('c' + (current + 1)).classList.add('active');
+        }
+
+        function teleport() {
+            const btn = document.getElementById('runBtn');
+            const wrap = document.getElementById('btn-wrap');
+            const x = Math.random() * (wrap.clientWidth - btn.clientWidth);
+            const y = (Math.random() - 0.5) * 200;
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+
+        function forgiveMe() {
+            confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+            document.getElementById('final-h').innerText = "I LOVE YOU! ❤️";
+            document.getElementById('final-p').innerText = "Jaldi se screen shot lo aur mujhe WhatsApp par bhejo! 🙈";
+            document.getElementById('btn-wrap').style.display = 'none';
+        }
 
         function toggleMusic() {
-            if (isPlaying) {
-                music.pause();
-                document.getElementById('musicBtn').innerText = "🔇";
-            } else {
-                music.play();
-                document.getElementById('musicBtn').innerText = "🎵";
-            }
-            isPlaying = !isPlaying;
+            const a = document.getElementById('track');
+            if(a.paused) { a.play(); document.getElementById('m-text').innerText = "Playing..."; }
+            else { a.pause(); document.getElementById('m-text').innerText = "Paused"; }
         }
 
-        function runAway() {
-            const btn = document.getElementById('yesBtn');
-            const container = document.getElementById('container');
-            
-            // Calculate random position within the container
-            const maxX = container.clientWidth - btn.clientWidth;
-            const maxY = container.clientHeight - btn.clientHeight;
-
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
-
-            btn.style.position = 'absolute';
-            btn.style.left = randomX + 'px';
-            btn.style.top = randomY + 'px';
-        }
-
-        function forgiven() {
-            const question = document.getElementById('question');
-            const container = document.getElementById('container');
-            
-            question.innerHTML = "I Love You So Much! ❤️<br>Main jaanta tha tum zyada der tak gussa nahi reh sakti!";
-            container.innerHTML = "<h3>Ab jaldi se mujhe call/text karo! 🙈</h3>";
-            
-            // Celebration effects
-            setInterval(createHeart, 100);
-        }
-
+        // Generate floating hearts
         function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 4000);
+            const h = document.createElement('div');
+            h.classList.add('heart');
+            h.innerHTML = '❤️';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.fontSize = Math.random() * 20 + 10 + 'px';
+            h.style.duration = Math.random() * 3 + 2 + 's';
+            document.getElementById('hearts-bg').appendChild(h);
+            setTimeout(() => h.remove(), 5000);
         }
-
-        // Background hearts slow animation
-        setInterval(createHeart, 500);
+        setInterval(createHeart, 400);
     </script>
 </body>
 </html>
